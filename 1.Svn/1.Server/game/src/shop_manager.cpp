@@ -39,3 +39,33 @@
 			}
 		}
 #endif
+
+//Find
+	if (boost::iequals(stSort, "Asc"))
+	{
+		std::sort(shopItems.begin(), shopItems.end(), CompareShopItemName);
+	}
+	else if(boost::iequals(stSort, "Desc"))
+	{
+		std::sort(shopItems.rbegin(), shopItems.rend(), CompareShopItemName);
+	}
+	
+///Add
+
+#ifdef ENABLE_RENEWAL_SHOPEX
+	else {
+		std::sort(shopItems.begin(), shopItems.end(), [stSort](const TShopItemTable& i1, const TShopItemTable& i2) 
+		{
+			TItemTable* lItem = ITEM_MANAGER::instance().GetTable(i1.vnum);
+			TItemTable* rItem = ITEM_MANAGER::instance().GetTable(i2.vnum);
+			if (stSort == "Vnum")
+				return i1.vnum > i2.vnum;
+			else if (stSort == "Price")
+				return i1.price > i2.price;
+			else if (stSort == "Name" && lItem && rItem)
+				return strcmp(lItem->szLocaleName, rItem->szLocaleName) < 0;
+			else if (stSort == "Type" && lItem && rItem)
+				return lItem->bType > rItem->bType;
+		});
+	}
+#endif
