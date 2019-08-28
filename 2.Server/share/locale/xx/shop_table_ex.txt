@@ -1,4 +1,5 @@
 
+
 Group ShopNPC
 {
 	#--#    NPC    Group
@@ -12,6 +13,7 @@ Group TAB1
 {
 	Vnum    14
 	Name    ARMOR
+	sort 	Name
 	Group Items
 	{
 		#--# Vnum	Count	Price	price_type	price_vnum socket0 socket1 socket2 attr_type0 attr_value0 attr_type1 attr_value1 attr_type2 attr_value2 attr_type3 attr_value3 attr_type4 attr_value4 attr_type5 attr_value5 attr_type6 attr_value6
@@ -25,6 +27,7 @@ Group TAB2
 {
 	Vnum    15
 	Name    WEAPON
+	sort 	Vnum
 	Group Items
 	{
 		#--# Vnum Count Price price_type price_vnum socket0 socket1 socket2 attr_type0 attr_value0 attr_type1 attr_value1 attr_type2 attr_value2 attr_type3 attr_value3 attr_type4 attr_value4 attr_type5 attr_value5 attr_type6 attr_value6
@@ -38,6 +41,7 @@ Group TAB3
 {
 	Vnum    16
 	Name    SHIELD
+	sort	Price
 	Group Items
 	{
 		#--# Vnum Count Price price_type price_vnum socket0 socket1 socket2 attr_type0 attr_value0 attr_type1 attr_value1 attr_type2 attr_value2 attr_type3 attr_value3 attr_type4 attr_value4 attr_type5 attr_value5 attr_type6 attr_value6
@@ -52,9 +56,13 @@ Group OKK
 {
 	Vnum    17
 	Name    wat
+	sort	Type
 	Group Items
 	{
 		#--# Vnum Count Price price_type price_vnum socket0 socket1 socket2 attr_type0 attr_value0 attr_type1 attr_value1 attr_type2 attr_value2 attr_type3 attr_value3 attr_type4 attr_value4 attr_type5 attr_value5 attr_type6 attr_value6
 		1	19	1	50000 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+		2	12019	1	50000 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+		3	12029	1	50000 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+		4	299		1	50000 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 	}
 }
