@@ -1,12 +1,9 @@
 #Find
-				self.middleRadioButtonGroup.OnClick(0)
+				self.smallRadioButtonGroup.OnClick(1)
 			
 #Change
 				#Fix for tabs
-				if app.ENABLE_RENEWAL_SHOPEX:
-					self.middleRadioButtonGroup.OnClick(0)
-				else:
-					self.middleRadioButtonGroup.OnClick(1)
+				self.smallRadioButtonGroup.OnClick(0)
 #Find
 	def OverInItem(self, slotIndex):
 	
@@ -16,7 +13,7 @@
 		if mouseModule.mouseController.isAttached():
 			return
 
-		if 0 != self.tooltipItem:
+		if self.tooltipItem:
 			if app.ENABLE_RENEWAL_SHOPEX:
 				PriceType = shop.GetItemPriceType(slotIndex)
 				if PriceType == 1:

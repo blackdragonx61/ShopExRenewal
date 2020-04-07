@@ -6,9 +6,7 @@
 		def SetShopItemByShopEx(self, slotIndex, type):
 			itemVnum = shop.GetItemID(slotIndex)
 			PriceVnum = shop.GetItemPriceVnum(slotIndex)
-			if 0 == itemVnum:
-				return
-			if PriceVnum == 0 and type == 3:
+			if itemVnum == 0 or (PriceVnum == 0 and type == 3):
 				return
 			price = shop.GetItemPrice(slotIndex)
 			self.ClearToolTip()
