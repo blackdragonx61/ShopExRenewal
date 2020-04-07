@@ -3,7 +3,6 @@
 	
 ///Add
 #ifdef ENABLE_RENEWAL_SHOPEX
-	DWORD 	price_type;
-	DWORD 	price_vnum;
-	packet_shop_item() : price_type(1), price_vnum(0){}
+	DWORD 	price_type = 1;
+	DWORD 	price_vnum = 0;
 #endif

@@ -3,11 +3,11 @@
 	
 ///Add
 #ifdef ENABLE_RENEWAL_SHOPEX
-	long		alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
-	TPlayerItemAttribute    aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
-	DWORD 	price_type;
-	DWORD 	price_vnum;
-	SShopItemTable() : price_type(1), price_vnum(0) {
+	long alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
+	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
+	DWORD 	price_type = 1;
+	DWORD 	price_vnum = 0;
+	SShopItemTable() {
 		memset(&alSockets, 0, sizeof(alSockets));
 		memset(&aAttr, 0, sizeof(aAttr));
 	}
