@@ -42,57 +42,45 @@
 #ifndef ENABLE_RENEWAL_SHOPEX	
 	switch (shopTab.coinType)
 	{
-		case SHOP_COIN_TYPE_GOLD:
-			if (it->second)
-				dwPrice *= 3;
+	case SHOP_COIN_TYPE_GOLD:
+		if (it->second)
+			dwPrice *= 3;
 
-			if (ch->GetGold() < (int) dwPrice)
-			{
-				sys_log(1, "ShopEx::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), dwPrice);
-				return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
-			}
-			break;
-		case SHOP_COIN_TYPE_SECONDARY_COIN:
-			{
-				int count = ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN);
-				if (count < dwPrice)
-				{
-					sys_log(1, "ShopEx::Buy : Not enough myeongdojun : %s has %d, price %d", ch->GetName(), count, dwPrice);
-					return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
-				}
-			}
-			break;
+		if (ch->GetGold() < (int)dwPrice)
+		{
+			sys_log(1, "ShopEx::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), dwPrice);
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+		}
+		break;
+	case SHOP_COIN_TYPE_SECONDARY_COIN:
+	{
+		int count = ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN);
+		if (count < dwPrice)
+		{
+			sys_log(1, "ShopEx::Buy : Not enough myeongdojun : %s has %d, price %d", ch->GetName(), count, dwPrice);
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
+		}
+	}
+	break;
 	}
 #else
 	switch (r_item.price_type)
 	{
-		case 1:
-			if (it->second)
-				dwPrice *= 3;
-			if (ch->GetGold() < static_cast<int>(dwPrice))
-				return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
-			break;
-		case 2:
-			{
-				int count = ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN);
-				if (count < dwPrice)
-					return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
-			}
-			break;
-		case 3:
-			{
-				int count = ch->CountSpecifyItem(r_item.price_vnum);
-				if (count < dwPrice)
-					return SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM;
-			}
-			break;
-		case 4:
-			{
-				int count = ch->GetExp();
-				if (count < dwPrice)
-					return SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP;
-			}
-			break;
+	case EX_GOLD:
+		if (static_cast<decltype(dwPrice)>(ch->GetGold()) < (it->second ? dwPrice * 3 : dwPrice))
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+	break;
+	case EX_SECONDARY:
+		if (static_cast<decltype(dwPrice)>(ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN)) < dwPrice)
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
+	break;
+	case EX_ITEM:
+		if (static_cast<decltype(dwPrice)>(ch->CountSpecifyItem(r_item.price_vnum)) < dwPrice)
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM;
+	break;
+	case EX_EXP:
+		if (ch->GetExp() < dwPrice)
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP;
 	}
 #endif
 
@@ -107,33 +95,34 @@
 			break;
 	}
 	
-///Add
+///Change
 #ifdef ENABLE_RENEWAL_SHOPEX
 	switch (r_item.price_type)
 	{
-		case 1: // gold
-			ch->PointChange(POINT_GOLD, -dwPrice, false);
-			break;
-		case 2: // secondcoin
-			ch->RemoveSpecifyTypeItem(ITEM_SECONDARY_COIN, dwPrice);
-			break;
-		case 3: // item
-			ch->RemoveSpecifyItem(r_item.price_vnum, dwPrice);
-			break;
-		case 4: // exp
-			ch->PointChange(POINT_EXP, -dwPrice, false);
-			break;
+	case EX_GOLD:
+		ch->PointChange(POINT_GOLD, -static_cast<int>(dwPrice), false);
+		break;
+	case EX_SECONDARY:
+		ch->RemoveSpecifyTypeItem(ITEM_SECONDARY_COIN, dwPrice);
+		break;
+	case EX_ITEM:
+		ch->RemoveSpecifyItem(r_item.price_vnum, dwPrice);
+		break;
+	case EX_EXP:
+		ch->PointChange(POINT_EXP, -static_cast<int>(dwPrice), false);
 	}
-	item->SetAttributes(r_item.aAttr);
-	item->SetSockets(r_item.alSockets);
+	if (!std::all_of(std::begin(r_item.aAttr), std::end(r_item.aAttr), [](const TPlayerItemAttribute& s) { return !s.bType; }))
+		item->SetAttributes(r_item.aAttr);
+	if (!std::all_of(std::begin(r_item.alSockets), std::end(r_item.alSockets), [](const long& s) { return !s; }))
+		item->SetSockets(r_item.alSockets);
 #else
 	switch (shopTab.coinType)
 	{
-		case SHOP_COIN_TYPE_GOLD:
-			ch->PointChange(POINT_GOLD, -dwPrice, false);
-			break;
-		case SHOP_COIN_TYPE_SECONDARY_COIN:
-			ch->RemoveSpecifyTypeItem(ITEM_SECONDARY_COIN, dwPrice);
-			break;
+	case SHOP_COIN_TYPE_GOLD:
+		ch->PointChange(POINT_GOLD, -dwPrice, false);
+		break;
+	case SHOP_COIN_TYPE_SECONDARY_COIN:
+		ch->RemoveSpecifyTypeItem(ITEM_SECONDARY_COIN, dwPrice);
+		break;
 	}
 #endif
