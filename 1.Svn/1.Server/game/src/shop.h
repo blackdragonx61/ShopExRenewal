@@ -19,3 +19,11 @@
 				memset(&alSockets, 0, sizeof(alSockets));
 				memset(&aAttr, 0, sizeof(aAttr));
 #endif	
+
+//Find
+		virtual bool	IsPCShop()	{ return m_pkPC ? true : false; }
+		
+///Add
+#ifdef ENABLE_RENEWAL_SHOPEX
+		virtual bool	IsShopEx() const { return false; };
+#endif

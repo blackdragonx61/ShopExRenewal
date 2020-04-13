@@ -67,3 +67,29 @@
 		});
 	}
 #endif
+
+//Find
+	TMapNPCshop map_npcShop;
+	
+///Add
+#ifdef ENABLE_RENEWAL_SHOPEX
+	{
+		std::unordered_set<CShop*> v;
+		// include unordered_set
+		auto ExDelete = [&v](TShopMap& c) {
+			for (auto it = c.begin(); !c.empty() && it != c.end();) {
+				const auto shop = it->second;
+				if (shop && shop->IsShopEx()) {
+					it = c.erase(it);
+					v.insert(shop);
+				}
+				else
+					++it;
+			}
+		};
+		ExDelete(m_map_pkShopByNPCVnum);
+		ExDelete(m_map_pkShop);
+		for (const auto& del : v)
+			delete del;
+	}
+#endif
