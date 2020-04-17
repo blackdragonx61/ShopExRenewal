@@ -93,3 +93,9 @@
 			delete del;
 	}
 #endif
+
+//Find
+		m_map_pkShop.insert(TShopMap::value_type (pkShopEx->GetVnum(), pkShopEx));
+
+///Change
+		m_map_pkShop.insert(TShopMap::value_type (table.dwVnum, pkShopEx));
