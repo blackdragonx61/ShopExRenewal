@@ -93,3 +93,41 @@
 			delete del;
 	}
 #endif
+
+//Find
+		if (pkShopEx->GetVnum() != 0 && m_map_pkShop.find(pkShopEx->GetVnum()) != m_map_pkShop.end())
+		{
+			sys_err("Shop vnum(%d) already exist.", pkShopEx->GetVnum());
+			return false;
+		}
+		m_map_pkShop.insert(TShopMap::value_type(pkShopEx->GetVnum(), pkShopEx));
+
+///Change
+		if (m_map_pkShop.find(table.dwVnum) != m_map_pkShop.end())
+		{
+			sys_err("Shop vnum(%d) already exist.", table.dwVnum);
+			return false;
+		}
+		m_map_pkShop.insert(TShopMap::value_type(table.dwVnum, pkShopEx));
+
+//Find
+void CShopManager::Destroy()
+{
+	TShopMap::iterator it = m_map_pkShop.begin();
+	while (it != m_map_pkShop.end())
+	{
+		delete it->second;
+		++it;
+	}
+
+	m_map_pkShop.clear();
+}
+
+///Change
+void CShopManager::Destroy()
+{
+	for (auto it = m_map_pkShopByNPCVnum.begin(); it != m_map_pkShopByNPCVnum.end(); ++it)
+		delete it->second;
+	m_map_pkShopByNPCVnum.clear();
+	m_map_pkShop.clear();
+}
