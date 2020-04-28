@@ -64,6 +64,7 @@
 				return strcmp(lItem->szLocaleName, rItem->szLocaleName) < 0;
 			else if (!stSort.compare("Type") && lItem && rItem)
 				return lItem->bType > rItem->bType;
+			return i1.vnum > i2.vnum;
 		});
 	}
 #endif
