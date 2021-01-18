@@ -1,5 +1,5 @@
 #Find
-				self.smallRadioButtonGroup.OnClick(1)
+				self.middleRadioButtonGroup.OnClick(1)
 			
 #Change
 				#Fix for tabs
@@ -16,9 +16,9 @@
 		if self.tooltipItem:
 			if app.ENABLE_RENEWAL_SHOPEX:
 				PriceType = shop.GetItemPriceType(slotIndex)
-				if PriceType == 1:
+				if PriceType == shop.SHOPEX_GOLD:
 					self.tooltipItem.SetShopItem(slotIndex)
-				elif PriceType == 2:
+				elif PriceType == shop.SHOPEX_SECONDCOIN:
 					self.tooltipItem.SetShopItemBySecondaryCoin(slotIndex)
 				else:
 					self.tooltipItem.SetShopItemByShopEx(slotIndex, PriceType)

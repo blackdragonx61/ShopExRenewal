@@ -2,12 +2,12 @@
 	BYTE		display_pos;
 	
 ///Add
-#ifdef ENABLE_RENEWAL_SHOPEX
+#if defined(ENABLE_RENEWAL_SHOPEX)
 	long alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
-	DWORD 	price_type = 1;
-	DWORD 	price_vnum = 0;
-	SShopItemTable() {
+	BYTE 	price_type;
+	DWORD 	price_vnum;
+	SShopItemTable() : price_type(SHOPEX_GOLD), price_vnum(0) {
 		memset(&alSockets, 0, sizeof(alSockets));
 		memset(&aAttr, 0, sizeof(aAttr));
 	}
@@ -17,7 +17,7 @@
 	SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX,
 		
 ///Add
-#ifdef ENABLE_RENEWAL_SHOPEX
+#if defined(ENABLE_RENEWAL_SHOPEX)
 	SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM,
 	SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP,
 #endif

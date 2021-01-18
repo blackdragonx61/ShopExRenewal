@@ -6,8 +6,8 @@
 #endif
 
 ///Add
-#ifdef ENABLE_RENEWAL_SHOPEX
-	PyModule_AddIntConstant(poModule, "ENABLE_RENEWAL_SHOPEX",	true);
+#if defined(ENABLE_RENEWAL_SHOPEX)
+	PyModule_AddIntConstant(poModule, "ENABLE_RENEWAL_SHOPEX", true);
 #else
-	PyModule_AddIntConstant(poModule, "ENABLE_RENEWAL_SHOPEX",	false);
+	PyModule_AddIntConstant(poModule, "ENABLE_RENEWAL_SHOPEX", false);
 #endif

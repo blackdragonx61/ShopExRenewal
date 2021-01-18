@@ -1,14 +1,41 @@
 //Find
+			switch (shop_tab.coinType)
+			{
+			case SHOP_COIN_TYPE_GOLD:
+				if (bOtherEmpire) // no empire price penalty for pc shop
+					pack_tab.items[i].price = shop_tab.items[i].price * 3;
+				else
+					pack_tab.items[i].price = shop_tab.items[i].price;
+				break;
+			case SHOP_COIN_TYPE_SECONDARY_COIN:
+				pack_tab.items[i].price = shop_tab.items[i].price;
+				break;
+			}
 			memset(pack_tab.items[i].aAttr, 0, sizeof(pack_tab.items[i].aAttr));
 			memset(pack_tab.items[i].alSockets, 0, sizeof(pack_tab.items[i].alSockets));
 			
 ///Change
-#ifdef ENABLE_RENEWAL_SHOPEX
+#if defined(ENABLE_RENEWAL_SHOPEX)
 			pack_tab.items[i].price_type = shop_tab.items[i].price_type;
 			pack_tab.items[i].price_vnum = shop_tab.items[i].price_vnum;
+			pack_tab.items[i].price = shop_tab.items[i].price;
+			if (bOtherEmpire && pack_tab.items[i].price_type == SHOPEX_GOLD)
+				pack_tab.items[i].price *= 3;
 			thecore_memcpy(pack_tab.items[i].aAttr, shop_tab.items[i].aAttr, sizeof(pack_tab.items[i].aAttr));
 			thecore_memcpy(pack_tab.items[i].alSockets, shop_tab.items[i].alSockets, sizeof(pack_tab.items[i].alSockets));
 #else
+			switch (shop_tab.coinType)
+			{
+			case SHOP_COIN_TYPE_GOLD:
+				if (bOtherEmpire) // no empire price penalty for pc shop
+					pack_tab.items[i].price = shop_tab.items[i].price * 3;
+				else
+					pack_tab.items[i].price = shop_tab.items[i].price;
+				break;
+			case SHOP_COIN_TYPE_SECONDARY_COIN:
+				pack_tab.items[i].price = shop_tab.items[i].price;
+				break;
+			}
 			memset(pack_tab.items[i].aAttr, 0, sizeof(pack_tab.items[i].aAttr));
 			memset(pack_tab.items[i].alSockets, 0, sizeof(pack_tab.items[i].alSockets));
 #endif
@@ -39,48 +66,50 @@
 	}
 	
 ///Change
-#ifndef ENABLE_RENEWAL_SHOPEX	
+#if defined(ENABLE_RENEWAL_SHOPEX)
+	switch (r_item.price_type)
+	{
+	case SHOPEX_GOLD:
+		if (it->second)
+			dwPrice *= 3;
+		if (ch->GetGold() < static_cast<int>(dwPrice))
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+		break;
+	case SHOPEX_SECONDARY:
+		if (ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN) < static_cast<int>(dwPrice))
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
+		break;
+	case SHOPEX_ITEM:
+		if (ch->CountSpecifyItem(r_item.price_vnum) < static_cast<int>(dwPrice))
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM;
+		break;
+	case SHOPEX_EXP:
+		if (ch->GetExp() < dwPrice)
+			return SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP;
+	}
+#else
 	switch (shopTab.coinType)
 	{
 	case SHOP_COIN_TYPE_GOLD:
-		if (it->second)
+		if (it->second)	// if other empire, price is triple
 			dwPrice *= 3;
 
 		if (ch->GetGold() < (int)dwPrice)
 		{
-			sys_log(1, "ShopEx::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), dwPrice);
+			sys_log(1, "ShopEx::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), static_cast<int>(dwPrice));
 			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
 		}
 		break;
 	case SHOP_COIN_TYPE_SECONDARY_COIN:
 	{
 		int count = ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN);
-		if (count < dwPrice)
+		if (count < static_cast<int>(dwPrice))
 		{
-			sys_log(1, "ShopEx::Buy : Not enough myeongdojun : %s has %d, price %d", ch->GetName(), count, dwPrice);
+			sys_log(1, "ShopEx::Buy : Not enough myeongdojun : %s has %d, price %d", ch->GetName(), count, static_cast<int>(dwPrice));
 			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
 		}
 	}
 	break;
-	}
-#else
-	switch (r_item.price_type)
-	{
-	case EX_GOLD:
-		if (static_cast<decltype(dwPrice)>(ch->GetGold()) < (it->second ? dwPrice * 3 : dwPrice))
-			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
-	break;
-	case EX_SECONDARY:
-		if (static_cast<decltype(dwPrice)>(ch->CountSpecifyTypeItem(ITEM_SECONDARY_COIN)) < dwPrice)
-			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
-	break;
-	case EX_ITEM:
-		if (static_cast<decltype(dwPrice)>(ch->CountSpecifyItem(r_item.price_vnum)) < dwPrice)
-			return SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM;
-	break;
-	case EX_EXP:
-		if (ch->GetExp() < dwPrice)
-			return SHOP_SUBHEADER_GC_NOT_ENOUGH_EXP;
 	}
 #endif
 
@@ -96,25 +125,23 @@
 	}
 	
 ///Change
-#ifdef ENABLE_RENEWAL_SHOPEX
+#if defined(ENABLE_RENEWAL_SHOPEX)
 	switch (r_item.price_type)
 	{
-	case EX_GOLD:
+	case SHOPEX_GOLD:
 		ch->PointChange(POINT_GOLD, -static_cast<int>(dwPrice), false);
 		break;
-	case EX_SECONDARY:
+	case SHOPEX_SECONDARY:
 		ch->RemoveSpecifyTypeItem(ITEM_SECONDARY_COIN, dwPrice);
 		break;
-	case EX_ITEM:
+	case SHOPEX_ITEM:
 		ch->RemoveSpecifyItem(r_item.price_vnum, dwPrice);
 		break;
-	case EX_EXP:
+	case SHOPEX_EXP:
 		ch->PointChange(POINT_EXP, -static_cast<int>(dwPrice), false);
 	}
-	if (!std::all_of(std::begin(r_item.aAttr), std::end(r_item.aAttr), [](const TPlayerItemAttribute& s) { return !s.bType; }))
-		item->SetAttributes(r_item.aAttr);
-	if (!std::all_of(std::begin(r_item.alSockets), std::end(r_item.alSockets), [](const long& s) { return !s; }))
-		item->SetSockets(r_item.alSockets);
+	item->SetAttributes(r_item.aAttr);
+	item->SetSockets(r_item.alSockets);
 #else
 	switch (shopTab.coinType)
 	{

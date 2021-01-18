@@ -4,7 +4,7 @@
 			break;
 			
 ///Add
-#ifdef ENABLE_RENEWAL_SHOPEX
+#if defined(ENABLE_RENEWAL_SHOPEX)
 		case SHOP_SUBHEADER_GC_NOT_ENOUGH_ITEM:
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Py_BuildValue("(s)", "NOT_ENOUGH_ITEM"));
 			break;

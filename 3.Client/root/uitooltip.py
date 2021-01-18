@@ -6,7 +6,7 @@
 		def SetShopItemByShopEx(self, slotIndex, type):
 			itemVnum = shop.GetItemID(slotIndex)
 			PriceVnum = shop.GetItemPriceVnum(slotIndex)
-			if itemVnum == 0 or (PriceVnum == 0 and type == 3):
+			if itemVnum == 0 or (PriceVnum == 0 and type == shop.SHOPEX_ITEM):
 				return
 			price = shop.GetItemPrice(slotIndex)
 			self.ClearToolTip()
@@ -19,7 +19,7 @@
 				attrSlot.append(shop.GetItemAttribute(slotIndex, i))
 			self.AddItemData(itemVnum, metinSlot, attrSlot)
 			self.AppendSpace(5)
-			if type == 3:
+			if type == shop.SHOPEX_ITEM:
 				self.AddSHOPEXItem(PriceVnum, price)
 			else:
 				self.AppendTextLine(localeInfo.TOOLTIP_BUYPRICE  % (localeInfo.NumberToShopEXP(price)), self.GetPriceColor(price))
