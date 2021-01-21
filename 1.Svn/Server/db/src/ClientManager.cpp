@@ -3,8 +3,8 @@
 	
 ///Add
 #if defined(ENABLE_RENEWAL_SHOPEX)
-	m_iShopEXTableSize(0),
 	m_pShopEXTable(NULL),
+	m_iShopEXTableSize(0),
 #endif
 
 //Find
