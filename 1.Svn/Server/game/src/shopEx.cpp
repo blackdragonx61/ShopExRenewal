@@ -140,8 +140,15 @@
 	case SHOPEX_EXP:
 		ch->PointChange(POINT_EXP, -static_cast<int>(dwPrice), false);
 	}
-	item->SetAttributes(r_item.aAttr);
-	item->SetSockets(r_item.alSockets);
+	{
+		/*Attr*/
+		item->SetAttributes(r_item.aAttr);
+
+		/*Socket*/
+		for (BYTE i = 0; i < ITEM_SOCKET_MAX_NUM; i++)
+			if (r_item.alSockets[i] != 0)
+				item->SetSocket(i, r_item.alSockets[i]);
+	}
 #else
 	switch (shopTab.coinType)
 	{
